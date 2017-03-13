@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Breath of the Wild - Map of Hyrule</title>
+		<style type="text/css">
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			#map {
+				width:100%;
+				height:100%;
+				color: #CCC;
+				background: #EFEFEF;
+			}
+			span.loading {
+				display: block;
+				text-align: center;
+				font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="map"><span class="loading">loading tiles...</span></div>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+		<script type="text/javascript">
+
+
+			/*
+			 * = PS_Bramus.GoogleMapsTileCutter Config
+			 * ----------------
+			 */
+
+				var repeatOnXAxis = false; // Do we need to repeat the image on the X-axis? Most likely you'll want to set this to false
+
+
+
+			/*
+			 * Helper function which normalizes the coords so that tiles can repeat across the X-axis (horizontally) like the standard Google map tiles.
+			 * ----------------
+			 */
+
+				function getNormalizedCoord(coord, zoom) {
+					if (!repeatOnXAxis) return coord;
+
+					var y = coord.y;
+					var x = coord.x;
+
+					// tile range in one direction range is dependent on zoom level
+					// 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
+					var tileRange = 1 << zoom;
+
+					// don't repeat across Y-axis (vertically)
+					if (y < 0 || y >= tileRange) {
+						return null;
+					}
+
+					// repeat across X-axis
+					if (x < 0 || x >= tileRange) {
+						x = (x % tileRange + tileRange) % tileRange;
+					}
+
+					return {
+						x: x,
+						y: y
+					};
+
+				}
+
+
+			/*
+			 * Main Core
+			 * ----------------
+			 */
+
+        var region_markers = [],
+            area_markers = [],
+            town_markers = [],
+            shrine_markers = [];
+
+				window.onload = function() {
+
+					// Define our custom map type
+					var customMapType = new google.maps.ImageMapType({
+						getTileUrl: function(coord, zoom) {
+							var normalizedCoord = getNormalizedCoord(coord, zoom);
+							if(normalizedCoord && (normalizedCoord.x < Math.pow(2, zoom)) && (normalizedCoord.x > -1) && (normalizedCoord.y < Math.pow(2, zoom)) && (normalizedCoord.y > -1)) {
+								return 'map/' + zoom + '_' + normalizedCoord.x + '_' + normalizedCoord.y + '.jpg';
+							} else {
+								return 'map/empty.jpg';
+							}
+						},
+						tileSize: new google.maps.Size(256, 256),
+						maxZoom: 7,
+						name: 'BotW.Hyrule'
+					});
+
+					// Basic options for our map
+					var myOptions = {
+						center: new google.maps.LatLng(0, 0),
+						zoom: 2,
+						minZoom: 0,
+						streetViewControl: false,
+						mapTypeControl: false,
+						mapTypeControlOptions: {
+							mapTypeIds: ["custom"]
+						}
+					};
+
+					// Init the map and hook our custom map type to it
+					var map = new google.maps.Map(document.getElementById('map'), myOptions);
+					map.mapTypes.set('custom', customMapType);
+					map.setMapTypeId('custom');
+
+          google.maps.event.addListener(map, "rightclick", function(event) {
+              var lat = event.latLng.lat();
+              var lng = event.latLng.lng();
+              // populate yor box/field with lat, lng
+              alert("['', " + lat + ", " + lng + "],");
+          });
+
+          google.maps.event.addListener(map, 'zoom_changed', function() {
+            zoomLevel = map.getZoom();
+            console.log(zoomLevel);
+            if (zoomLevel > 3) {
+              for (it in region_markers) {
+                  region_markers[it].setVisible(false);
+              }
+
+              markerCluster1.repaint();
+            } else {
+              for (var it in region_markers) {
+                  region_markers[it].setVisible(true);
+              }
+
+              markerCluster1.repaint();
+            }
+            if (zoomLevel > 3 && zoomLevel < 6) {
+              for (it in area_markers) {
+                  area_markers[it].setVisible(true);
+              }
+              for (it in town_markers) {
+                  town_markers[it].setVisible(true);
+              }
+              markerCluster2.repaint();
+              markerCluster3.repaint();
+            } else {
+              for (it in area_markers) {
+                  area_markers[it].setVisible(false);
+              }
+              for (it in town_markers) {
+                  town_markers[it].setVisible(false);
+              }
+
+              markerCluster2.repaint();
+              markerCluster3.repaint();
+            }
+          });
+
+          var hyrule_regions = [
+            ['Akkala', 53.65114992539623, 83.3642578125],
+            ['Central Hyrule', 0.26367094433665017, -5.537109375],
+            ['Eldin', 36.12900165569653, 44.307861328125],
+            ['Faron', -53.46189043285912, 21.07177734375],
+            ['Gerudo', -59.77852198502986, -90.3076171875],
+            ['Hebra', 50.65990836093937, -73.333740234375],
+            ['Lanayru', -14.381476281951622, 69.49951171875],
+            ['Necluda', -35.04798673426733, 48.614501953125]
+          ];
+
+          var hyrule_areas = [
+            ['Akkala Highlands', 43.58039085560783, 78.75],
+            ['Akkala Sea', 59.44507509904713, 106.69921875],
+            ['Death Mountain', 52.05249047600099, 55.1953125],
+            ['Deep Akkala', 57.42129439209407, 76.46484375],
+            ['East Necluda', -48.92249926375824, 59.0625],
+            ['Eldin Canyon', 29.38217507514529, 39.7265625],
+            ['Faron Grasslands', -57.42129439209404, -10.72265625],
+            ['Faron Sea', -66.44310650816466, -1.40625],
+            ['Gerudo Desert', -60.67317856581772, -87.5390625],
+            ['Gerudo Highlands', -17.89511430374914, -90.263671875],
+            ['Great Hyrule Forest', 48.10743118848039, 7.734375],
+            ['Hebra Mountains', 54.059387886623576, -68.3349609375],
+            ['Hyrule Field', -13.154376055418517, -9.66796875],
+            ['Hyrule Ridge', 9.44906182688142, -52.998046875],
+            ['Lake Hylia', -47.8721439688873, -3.33984375],
+            ['Lanayru Great Spring', -4.915832801313165, 81.2109375],
+            ['Lanayru Sea', 3.5134210456400448, 100.8984375],
+            ['Lanayru Wetlands', 0, 37.08984375],
+            ['Mount Lanayru', -30.600093873550062, 85.95703125],
+            ['Necluda Sea', -53.120405283106564, 91.93359375],
+            ['Tabantha Frontier', 25.04579224030345, -75.234375],
+            ['Tabantha Tundra', 52.295042284537345, -39.1552734375],
+            ['West Necluda', -31.20340495091738, 29.00390625]
+          ];
+
+          var hyrule_towns = [
+            ['Rito Village', 36.73888412439431, -79.617919921875],
+            ['Gerudo Town', -53.87844040332882, -84.638671875],
+            ['Lurelin Village', -60.44638185995601, 66.104736328125],
+            ['Hateno Village', -42.431565872579164, 79.112548828125],
+            ['Kakariko Village', -21.26889971996768, 39.83642578125],
+            ["Zora's Domain", 8.841651120809145, 71.7626953125],
+            ['Terry Town', 33.330528249028085, 87.110595703125],
+            ['Goron City', 47.81315451752767, 36.9140625],
+            ['Korok Forest', 42.49640294093705, 9.459228515625]
+          ];
+
+          var hyrule_shrines = [
+            ['Hia Miu', 63.80189351770543, -97.6904296875],
+            ['To Quomo', 62.925235662542946, -88.35205078125],
+            ['Mozo Shenno', 55.397831459360326, -79.705810546875],
+            ['Maka Rah', 48.09275716032735, -89.09912109375],
+            ['Sha Warvo', 43.59630591596548, -83.95751953125],
+            ['Voo Lota', 35.290468565908775, -88.2861328125],
+            ["Akh Va'quot", 35.96911507577482, -80.33203125],
+            ['Bareeda Naag', 31.5691754490709, -79.332275390625],
+            ['Shada Naw', 57.61010702068388, -65.89599609375],
+            ['Goma Asaagh', 53.3177490474909, -61.3916015625],
+            ['Rok Uwog', 57.645400667406605, -52.1630859375],
+            ['Sha Gehma', 63.386600640372414, -36.76025390625],
+            ['Qaza Tokki', 61.09547901951209, -18.0615234375],
+            ['Rona Kachta', 50.3734961443035, -23.917236328125],
+            ['Rin Oyaa', 48.850258199721495, -37.781982421875],
+            ["Gee Ha'rah", 44.33956524809714, -52.393798828125],
+            ['Lanno Kooh', 41.236511201246216, -57.89794921875],
+            ['Dunba Taag', 32.7503226078097, -62.29248046875],
+            ["Tena Ko'sah", 9.828154458476808, -76.0693359375],
+            ['Kah Okeo', 9.05870215639214, -90.52734375],
+            ['Monya Toma', 30.789036751261136, -32.706298828125],
+            ["Maag No'rah", 30.524413269923986, -42.593994140625],
+            ['Toh Yahsa', 19.476950206488414, -49.85595703125],
+            ['Shae Loya', 9.481572085088517, -64.346923828125],
+            ['Mijah Rokee', -4.882994243904852, -60.35888671875]
+          ];
+
+          var markerCluster1 = new MarkerClusterer(map, region_markers),
+              markerCluster2 = new MarkerClusterer(map, area_markers),
+              markerCluster3 = new MarkerClusterer(map, town_markers),
+              markerCluster4 = new MarkerClusterer(map, shrine_markers);
+
+          setMarkers(map);
+
+          function setMarkers(map) {
+            for (var i = 0; i < hyrule_regions.length; i++) {
+              var place = hyrule_regions[i];
+              var marker = new google.maps.Marker({
+                position: {lat: place[1], lng: place[2]},
+                map: map,
+                label: {
+                  text: place[0],
+                  color: '#b5a268',
+                  fontSize: '20px'
+                },
+                icon: 'transparent.gif'
+              });
+              region_markers.push(marker);
+            }
+
+            for (i = 0; i < hyrule_areas.length; i++) {
+              place = hyrule_areas[i];
+              marker = new google.maps.Marker({
+                position: {lat: place[1], lng: place[2]},
+                map: map,
+                label: {
+                  text: place[0],
+                  color: '#b5a268',
+                  fontSize: '20px'
+                },
+                icon: 'transparent.gif',
+                visible: false
+              });
+              area_markers.push(marker);
+            }
+
+            for (i = 0; i < hyrule_towns.length; i++) {
+              place = hyrule_towns[i];
+              marker = new google.maps.Marker({
+                position: {lat: place[1], lng: place[2]},
+                map: map,
+                icon: 'https://i.stack.imgur.com/cdiAE.png',
+                visible: false
+              });
+              town_markers.push(marker);
+            }
+
+            for (i = 0; i < hyrule_shrines.length; i++) {
+              place = hyrule_shrines[i];
+              marker = new google.maps.Marker({
+                position: {lat: place[1], lng: place[2]},
+                map: map,
+                icon: 'https://i.stack.imgur.com/rU427.png'
+              });
+              shrine_markers.push(marker);
+            }
+          }
+        };
+
+        function toggleGroup(type) {
+          for (var i = 0; i < markerGroups[type].length; i++) {
+            var marker = markerGroups[type][i];
+            if (marker.isHidden()) {
+              marker.show();
+            } else {
+              marker.hide();
+            }
+          } 
+        }
+		</script>
+
+	</body>
+</html>
