@@ -1,469 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Breath of the Wild - Map of Hyrule</title>
-		<style type="text/css">
-			html, body {
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
-			#map {
-				width:100%;
-				height:100%;
-				color: #CCC;
-				background: #EFEFEF;
-			}
-			span.loading {
-				display: block;
-				text-align: center;
-				font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="map"><span class="loading">loading tiles...</span></div>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-		<script type="text/javascript">
 
+<head>
+  <title>Breath of the Wild - Map of Hyrule</title>
+  <style type="text/css">
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #map {
+      width: 100%;
+      height: 100%;
+      color: #CCC;
+      background: #EFEFEF;
+    }
+    
+    span.loading {
+      display: block;
+      text-align: center;
+      font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+    }
+  </style>
+</head>
 
-			/*
-			 * = PS_Bramus.GoogleMapsTileCutter Config
-			 * ----------------
-			 */
+<body>
+  <div id="map"><span class="loading">loading tiles...</span></div>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+  <script type="text/javascript">
+    var repeatOnXAxis = false,
+      region_markers = [],
+      area_markers = [],
+      town_markers = [],
+      tower_markers = [],
+      shrine_markers = [],
+      minZoomLevel = 3;
 
-				var repeatOnXAxis = false; // Do we need to repeat the image on the X-axis? Most likely you'll want to set this to false
+    function getNormalizedCoord(coord, zoom) {
+      if (!repeatOnXAxis) return coord;
 
+      var y = coord.y,
+        x = coord.x,
+        tileRange = 1 << zoom;
 
+      if (y < 0 || y >= tileRange) {
+        return null;
+      }
 
-			/*
-			 * Helper function which normalizes the coords so that tiles can repeat across the X-axis (horizontally) like the standard Google map tiles.
-			 * ----------------
-			 */
+      if (x < 0 || x >= tileRange) {
+        x = (x % tileRange + tileRange) % tileRange;
+      }
 
-				function getNormalizedCoord(coord, zoom) {
-					if (!repeatOnXAxis) return coord;
+      return {
+        x: x,
+        y: y
+      };
+    }
 
-					var y = coord.y;
-					var x = coord.x;
+    var 
 
-					// tile range in one direction range is dependent on zoom level
-					// 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
-					var tileRange = 1 << zoom;
+    window.onload = function() {
 
-					// don't repeat across Y-axis (vertically)
-					if (y < 0 || y >= tileRange) {
-						return null;
-					}
-
-					// repeat across X-axis
-					if (x < 0 || x >= tileRange) {
-						x = (x % tileRange + tileRange) % tileRange;
-					}
-
-					return {
-						x: x,
-						y: y
-					};
-
-				}
-
-
-			/*
-			 * Main Core
-			 * ----------------
-			 */
-
-        var region_markers = [],
-            area_markers = [],
-            town_markers = [],
-            tower_markers = [],
-            shrine_markers = [],
-            minZoomLevel = 3;
-
-				window.onload = function() {
-
-					// Define our custom map type
-					var customMapType = new google.maps.ImageMapType({
-						getTileUrl: function(coord, zoom) {
-							var normalizedCoord = getNormalizedCoord(coord, zoom);
-							if(normalizedCoord && (normalizedCoord.x < Math.pow(2, zoom)) && (normalizedCoord.x > -1) && (normalizedCoord.y < Math.pow(2, zoom)) && (normalizedCoord.y > -1)) {
-								return 'map/' + zoom + '_' + normalizedCoord.x + '_' + normalizedCoord.y + '.jpg';
-							} else {
-								return 'map/empty.jpg';
-							}
-						},
-						tileSize: new google.maps.Size(256, 256),
-						maxZoom: 7,
-						name: 'BotW.Hyrule'
-					});
-
-					// Basic options for our map
-					var myOptions = {
-						center: new google.maps.LatLng(0, 0),
-						zoom: minZoomLevel,
-						minZoom: 0,
-						streetViewControl: false,
-						mapTypeControl: false,
-						mapTypeControlOptions: {
-							mapTypeIds: ["custom"]
-						}
-					};
-
-					// Init the map and hook our custom map type to it
-					var map = new google.maps.Map(document.getElementById('map'), myOptions);
-					map.mapTypes.set('custom', customMapType);
-					map.setMapTypeId('custom');
-
-          var strictBounds = new google.maps.LatLngBounds(
-          new google.maps.LatLng(-71.41317683396565, -122.6953125),
-          new google.maps.LatLng(71.52490903732816, 120.9375));
-
-          google.maps.event.addListener(map, 'dragend', function () {
-              if (strictBounds.contains(map.getCenter())) return;
-
-              // We're out of bounds - Move the map back within the bounds
-
-              var c = map.getCenter(),
-                  x = c.lng(),
-                  y = c.lat(),
-                  maxX = strictBounds.getNorthEast().lng(),
-                  maxY = strictBounds.getNorthEast().lat(),
-                  minX = strictBounds.getSouthWest().lng(),
-                  minY = strictBounds.getSouthWest().lat();
-
-              if (x < minX) x = minX;
-              if (x > maxX) x = maxX;
-              if (y < minY) y = minY;
-              if (y > maxY) y = maxY;
-
-              map.setCenter(new google.maps.LatLng(y, x));
-          });
-
-          google.maps.event.addListener(map, 'zoom_changed', function () {
-              if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
-          });
-
-          google.maps.event.addListener(map, "rightclick", function(event) {
-              var lat = event.latLng.lat();
-              var lng = event.latLng.lng();
-              // populate yor box/field with lat, lng
-              alert("['', " + lat + ", " + lng + "],");
-          });
-
-          google.maps.event.addListener(map, 'zoom_changed', function() {
-            zoomLevel = map.getZoom();
-            console.log(zoomLevel);
-            if (zoomLevel > 3) {
-              for (it in region_markers) {
-                  region_markers[it].setVisible(false);
-              }
-
-              markerCluster1.repaint();
-            } else {
-              for (var it in region_markers) {
-                  region_markers[it].setVisible(true);
-              }
-
-              markerCluster1.repaint();
-            }
-            if (zoomLevel > 3 && zoomLevel < 6) {
-              for (it in area_markers) {
-                  area_markers[it].setVisible(true);
-              }
-              for (it in town_markers) {
-                  town_markers[it].setVisible(true);
-              }
-              markerCluster2.repaint();
-              markerCluster3.repaint();
-            } else {
-              for (it in area_markers) {
-                  area_markers[it].setVisible(false);
-              }
-              for (it in town_markers) {
-                  town_markers[it].setVisible(false);
-              }
-
-              markerCluster2.repaint();
-              markerCluster3.repaint();
-            }
-          });
-
-          var regions = [
-            ['Akkala', 53.65114992539623, 83.3642578125],
-            ['Central Hyrule', 0.26367094433665017, -5.537109375],
-            ['Eldin', 36.12900165569653, 44.307861328125],
-            ['Faron', -53.46189043285912, 21.07177734375],
-            ['Gerudo', -59.77852198502986, -90.3076171875],
-            ['Hebra', 50.65990836093937, -73.333740234375],
-            ['Lanayru', -14.381476281951622, 69.49951171875],
-            ['Necluda', -35.04798673426733, 48.614501953125]
-          ];
-
-          var areas = [
-            ['Akkala Highlands', 43.58039085560783, 78.75],
-            ['Akkala Sea', 59.44507509904713, 106.69921875],
-            ['Death Mountain', 52.05249047600099, 55.1953125],
-            ['Deep Akkala', 57.42129439209407, 76.46484375],
-            ['East Necluda', -48.92249926375824, 59.0625],
-            ['Eldin Canyon', 29.38217507514529, 39.7265625],
-            ['Faron Grasslands', -57.42129439209404, -10.72265625],
-            ['Faron Sea', -66.44310650816466, -1.40625],
-            ['Gerudo Desert', -60.67317856581772, -87.5390625],
-            ['Gerudo Highlands', -17.89511430374914, -90.263671875],
-            ['Great Hyrule Forest', 48.10743118848039, 7.734375],
-            ['Hebra Mountains', 54.059387886623576, -68.3349609375],
-            ['Hyrule Field', -13.154376055418517, -9.66796875],
-            ['Hyrule Ridge', 9.44906182688142, -52.998046875],
-            ['Lake Hylia', -47.8721439688873, -3.33984375],
-            ['Lanayru Great Spring', -4.915832801313165, 81.2109375],
-            ['Lanayru Sea', 3.5134210456400448, 100.8984375],
-            ['Lanayru Wetlands', 0, 37.08984375],
-            ['Mount Lanayru', -30.600093873550062, 85.95703125],
-            ['Necluda Sea', -53.120405283106564, 91.93359375],
-            ['Tabantha Frontier', 25.04579224030345, -75.234375],
-            ['Tabantha Tundra', 52.295042284537345, -39.1552734375],
-            ['West Necluda', -31.20340495091738, 29.00390625]
-          ];
-
-          var towns = [
-            ['Rito Village', 36.73888412439431, -79.617919921875],
-            ['Gerudo Town', -53.87844040332882, -84.638671875],
-            ['Lurelin Village', -60.44638185995601, 66.104736328125],
-            ['Hateno Village', -42.431565872579164, 79.112548828125],
-            ['Kakariko Village', -21.26889971996768, 39.83642578125],
-            ["Zora's Domain", 8.841651120809145, 71.7626953125],
-            ['Tarrey Town', 33.330528249028085, 87.110595703125],
-            ['Goron City', 47.81315451752767, 36.9140625],
-            ['Korok Forest', 42.49640294093705, 9.459228515625]
-          ];
-
-          var towers = [
-            ['Akkala', 31.316101383495624, 72.696533203125],
-            ['Central', -9.633245727691198, -17.38037109375],
-            ['Dueling Peaks', -35.26356186215208, 22.291259765625],
-            ['Eldin', 32.36140331527543, 47.757568359375],
-            ['Faron', -58.228596132481435, 29.28955078125],
-            ['Gerudo', -37.23032838760386, -80.672607421875],
-            ['Great Plateau', -34.86790496256872, -12.315673828125],
-            ['Hateno', -42.40723466155186, 60.05126953125],
-            ['Hebra', 40.70562793820589, -47.74658203125],
-            ['Lake', -54.39974815563758, -0.692138671875],
-            ['Lanayru', 2.4052990502867853, 49.603271484375],
-            ['Ridgeland', 16.81505795923194, -38.49609375],
-            ['Tabantha', 21.28937435586042, -79.420166015625],
-            ['Wasteland', -47.10004469402519, -50.82275390625],
-            ['Woodland', 33.29380355834659, 19.456787109375]
-          ];
-
-          var shrines = [
-            ["Akh Va'quot", 35.96911507577482, -80.33203125],
-            ["Dow Na'eh", -28.06228599981216, 59.271240234375],
-            ["Gee Ha'rah", 44.33956524809714, -52.393798828125],
-            ["Jitan Sa'mi", -27.741884632507073, 85.330810546875],
-            ["Ka'o Makagh", -60.97843744941454, 11.480712890625],
-            ["Kaam Ya'tak", -15.527790862993772, -21.2255859375],
-            ["Ke'nai Shakah", 18.437924653474408, 92.186279296875],
-            ["Korsh O'hu", -52.456009392640745, -59.150390625],
-            ["Maag No'rah", 30.524413269923986, -42.593994140625],
-            ["Mo'a Keet", 24.776759933219164, 59.886474609375],
-            ["Ne'ez Yohma", 11.31848056989431, 73.026123046875],
-            ["Saas Ko'sah", 24.56710835257599, -3.328857421875],
-            ["Shae Mo'sah", 48.99463598353405, 38.64990234375],
-            ["Ta'loh Naeg", -19.114029215761995, 40.5615234375],
-            ["Tahno O'ah", -34.777715803604686, 91.93359375],
-            ["Tena Ko'sah", 9.828154458476808, -76.0693359375],
-            ["Tu Ka'loh", 62.87017895189572, 102.3046875],
-            ['Bareeda Naag', 31.5691754490709, -79.332275390625],
-            ['Bosh Kala', -34.207259382072294, 1.77978515625],
-            ['Chaas Qeta', -54.724620194924476, 88.121337890625],
-            ['Daag Chokah', 47.43551915319531, -0.648193359375],
-            ['Dagah Keek', 9.102096738726456, 69.202880859375],
-            ['Dah Hesho', 27.46928747369202, 85.792236328125],
-            ['Daka Tuss', -10.131116841540678, 35.167236328125],
-            ['Dako Tah', -42.859859815062784, -72.872314453125],
-            ['Daqa Koh', 45.4524242413431, 45.3076171875],
-            ['Daqo Chisay', -52.52290594027806, -83.82568359375],
-            ['Dila Maag', -60.33238607249708, -39.451904296875],
-            ['Dunba Taag', 32.7503226078097, -62.29248046875],
-            ['Goma Asaagh', 53.3177490474909, -61.3916015625],
-            ['Gorae Torr', 60.25616696589458, 58.524169921875],
-            ['Ha Dahamar', -38.83114980934873, 36.507568359375],
-            ['Hawa Koth', -63.48976680530998, -106.45751953125],
-            ['Hia Miu', 63.80189351770543, -97.6904296875],
-            ['Hila Rao', -18.145851771694467, 18.78662109375],
-            ['Ishto Soh', -61.401978048598956, -21.62109375],
-            ['Ja Baij', -40.044437584608566, -9.7998046875],
-            ['Jee Noh', -46.882723010671945, -39.4189453125],
-            ['Joloo Nah', -34.43409789359468, -43.956298828125],
-            ['Kah Kaso', -34.97600151317588, -37.28759765625],
-            ['Kah Mael', 27.68352808378776, 103.502197265625],
-            ['Kah Okeo', 9.05870215639214, -90.52734375],
-            ['Kah Yah', -58.699775731440056, 75.487060546875],
-            ['Kam Urog', -31.156408414557, 54.942626953125],
-            ['Katah Chuki', 7.493196470122287, -14.051513671875],
-            ['Katosa Aug', 51.36492148825952, 94.317626953125],
-            ['Kay Noh', -45.03471477868861, -61.688232421875],
-            ['Kaya Wan', -4.105369348495166, 18.138427734375],
-            ['Kayra Mah', 40.871987756697415, 45.670166015625],
-            ['Keeha Yoog', -15.47485740268724, -84.627685546875],
-            ['Keh Namut', -40.01920130768676, -31.629638671875],
-            ['Kema Kosassa', -19.43551433909781, -102.403564453125],
-            ['Kema Zoos', -39.698734143481396, -102.777099609375],
-            ['Keo Ruug', 42.98053954751643, 10.30517578125],
-            ['Ketoh Wawai', 56.401744392758964, 6.30615234375],
-            ['Korgu Chideh', -63.51427544737997, 104.073486328125],
-            ['Kuh Takkar', -25.859223554761382, -67.6318359375],
-            ['Kuhn Sidajj', 39.172658670429946, 0.439453125],
-            ['Lakna Rokee', -20.85881179086769, 44.835205078125],
-            ['Lanno Kooh', 41.236511201246216, -57.89794921875],
-            ['Maag Halan', 46.9502622421856, 18.380126953125],
-            ['Maka Rah', 48.09275716032735, -89.09912109375],
-            ['Mezza Lo', -8.309341443917633, 57.6123046875],
-            ['Mijah Rokee', -4.882994243904852, -60.35888671875],
-            ['Mirro Shaz', 25.69103802005013, 27.0263671875],
-            ['Misae Suma', -63.59744766560199, -65.3466796875],
-            ['Mogg Latan', -10.04458498421179, -50.51513671875],
-            ['Monya Toma', 30.789036751261136, -32.706298828125],
-            ['Mozo Shenno', 55.397831459360326, -79.705810546875],
-            ['Muwo Jeem', -58.57970885637573, 80.364990234375],
-            ['Myahm Agana', -43.71553472620511, 74.454345703125],
-            ['Namika Ozz', 17.78007412664325, 16.72119140625],
-            ['Noya Neha', 13.581920900545844, -20.91796875],
-            ['Oman Au', -31.512995857454666, -14.776611328125],
-            ['Owa Daim', -45.367584368849776, -20.2587890625],
-            ['Pumaag Nitae', -54.724620194924476, 12.337646484375],
-            ['Qaza Tokki', 61.09547901951209, -18.0615234375],
-            ['Qua Raym', 31.644028945047822, 40.05615234375],
-            ['Qukah Nata', -58.32102986925195, 44.088134765625],
-            ['Raqa Zunzo', -56.413901376006756, -83.660888671875],
-            ['Ree Dahee', -37.49229399862877, 28.004150390625],
-            ['Rin Oyaa', 48.850258199721495, -37.781982421875],
-            ['Ritaag Zumo', 42.39912215986001, 99.51416015625],
-            ['Rok Uwog', 57.645400667406605, -52.1630859375],
-            ['Rona Kachta', 50.3734961443035, -23.917236328125],
-            ['Rota Ooh', -27.664068965384512, -34.376220703125],
-            ['Rucco Maag', -9.373192635083443, 73.23486328125],
-            ['Sah Dahaj', 32.80574473290688, 58.5791015625],
-            ['Sasa Kai', -39.43619299931407, -78.233642578125],
-            ['Sha Gehma', 63.386600640372414, -36.76025390625],
-            ['Sha Warvo', 43.59630591596548, -83.95751953125],
-            ['Shada Naw', 57.61010702068388, -65.89599609375],
-            ['Shae Katha', -45.49094569262731, 19.16015625],
-            ['Shae Loya', 9.481572085088517, -64.346923828125],
-            ['Shai Utoh', -61.897577621605016, 34.8046875],
-            ['Shai Yota', -5.5175752008306205, 93.27392578125],
-            ['Shee Vaneer', -39.1896908210968, 27.7294921875],
-            ['Shee Venath', -37.60552821745788, 27.344970703125],
-            ['Sheem Dagoze', -2.1198775074231926, -41.68212890625],
-            ['Sheh Rata', 8.28759884935513, 33.15673828125],
-            ['Sho Dantu', -34.12544756511611, -85.9130859375],
-            ['Shoda Sah', -54.80701713846255, 39.342041015625],
-            ['Shoqa Tatone', -64.16331938811743, 2.142333984375],
-            ['Shora Hah', 56.3409012041991, 33.739013671875],
-            ['Soh Kofi', 6.402648405963896, 49.141845703125],
-            ['Suma Sahma', -60.190694753105745, -31.190185546875],
-            ['Tah Muhl', 20.29311344754411, 50.504150390625],
-            ['Tawa Jinn', -52.70301871296325, 57.908935546875],
-            ['Tho Kayu', -52.25470880113082, -105.3369140625],
-            ['To Quomo', 62.925235662542946, -88.35205078125],
-            ['Toh Yahsa', 19.476950206488414, -49.85595703125],
-            ['Toto Sah', -47.65058757118733, 40.517578125],
-            ['Tutsuwa Nima', 50.944584434950116, 82.99072265625],
-            ['Voo Lota', 35.290468565908775, -88.2861328125],
-            ['Wahgo Katta', -21.596150576461426, 7.55859375],
-            ['Ya Naga', -49.496674527470425, -7.218017578125],
-            ['Yah Rin', -58.63693504810121, 62.20458984375],
-            ['Zalta Wa', 12.897489183755892, -31.541748046875],
-            ['Ze Kasho', 34.4069096565206, 66.42333984375],
-            ['Zuna Kai', 59.85585085709834, 73.026123046875]
-          ];
-
-          var markerCluster1 = new MarkerClusterer(map, region_markers),
-              markerCluster2 = new MarkerClusterer(map, area_markers),
-              markerCluster3 = new MarkerClusterer(map, town_markers),
-              markerCluster4 = new MarkerClusterer(map, tower_markers),
-              markerCluster5 = new MarkerClusterer(map, shrine_markers);
-
-          setMarkers(map);
-
-          function setMarkers(map) {
-            for (var i = 0; i < regions.length; i++) {
-              var place = regions[i];
-              var marker = new google.maps.Marker({
-                position: {lat: place[1], lng: place[2]},
-                map: map,
-                label: {
-                  text: place[0],
-                  color: '#b5a268',
-                  fontSize: '20px'
-                },
-                icon: 'transparent.gif'
-              });
-              region_markers.push(marker);
-            }
-
-            for (i = 0; i < areas.length; i++) {
-              place = areas[i];
-              marker = new google.maps.Marker({
-                position: {lat: place[1], lng: place[2]},
-                map: map,
-                label: {
-                  text: place[0],
-                  color: '#b5a268',
-                  fontSize: '20px'
-                },
-                icon: 'transparent.gif',
-                visible: false
-              });
-              area_markers.push(marker);
-            }
-
-            for (i = 0; i < towns.length; i++) {
-              place = towns[i];
-              marker = new google.maps.Marker({
-                position: {lat: place[1], lng: place[2]},
-                map: map,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',
-                visible: false
-              });
-              town_markers.push(marker);
-            }
-
-            for (i = 0; i < towers.length; i++) {
-              place = towers[i];
-              marker = new google.maps.Marker({
-                position: {lat: place[1], lng: place[2]},
-                map: map,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/purple.png'
-              });
-              tower_markers.push(marker);
-            }
-
-            for (i = 0; i < shrines.length; i++) {
-              place = shrines[i];
-              marker = new google.maps.Marker({
-                position: {lat: place[1], lng: place[2]},
-                map: map,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
-              });
-              shrine_markers.push(marker);
-            }
+      // Define our custom map type
+      var customMapType = new google.maps.ImageMapType({
+        getTileUrl: function(coord, zoom) {
+          var normalizedCoord = getNormalizedCoord(coord, zoom);
+          if (normalizedCoord && (normalizedCoord.x < Math.pow(2, zoom)) && (normalizedCoord.x > -1) && (normalizedCoord.y < Math.pow(2, zoom)) && (normalizedCoord.y > -1)) {
+            return 'map/' + zoom + '_' + normalizedCoord.x + '_' + normalizedCoord.y + '.jpg';
+          } else {
+            return 'map/empty.jpg';
           }
-        };
+        },
+        tileSize: new google.maps.Size(256, 256),
+        maxZoom: 7,
+        name: 'BotW.Hyrule'
+      });
 
-        function toggleGroup(type) {
-          for (var i = 0; i < markerGroups[type].length; i++) {
-            var marker = markerGroups[type][i];
-            if (marker.isHidden()) {
-              marker.show();
-            } else {
-              marker.hide();
-            }
-          } 
+      // Basic options for our map
+      var myOptions = {
+        center: new google.maps.LatLng(0, 0),
+        zoom: minZoomLevel,
+        minZoom: 0,
+        streetViewControl: false,
+        mapTypeControl: false,
+        mapTypeControlOptions: {
+          mapTypeIds: ["custom"]
         }
-		</script>
+      };
 
-	</body>
+      // Init the map and hook our custom map type to it
+      var map = new google.maps.Map(document.getElementById('map'), myOptions);
+      map.mapTypes.set('custom', customMapType);
+      map.setMapTypeId('custom');
+
+      var strictBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-71.41317683396565, -122.6953125),
+        new google.maps.LatLng(71.52490903732816, 120.9375));
+
+      google.maps.event.addListener(map, 'dragend', function() {
+        if (strictBounds.contains(map.getCenter())) return;
+
+        // We're out of bounds - Move the map back within the bounds
+
+        var c = map.getCenter(),
+          x = c.lng(),
+          y = c.lat(),
+          maxX = strictBounds.getNorthEast().lng(),
+          maxY = strictBounds.getNorthEast().lat(),
+          minX = strictBounds.getSouthWest().lng(),
+          minY = strictBounds.getSouthWest().lat();
+
+        if (x < minX) x = minX;
+        if (x > maxX) x = maxX;
+        if (y < minY) y = minY;
+        if (y > maxY) y = maxY;
+
+        map.setCenter(new google.maps.LatLng(y, x));
+      });
+
+      google.maps.event.addListener(map, 'zoom_changed', function() {
+        if (map.getZoom() < minZoomLevel) map.setZoom(minZoomLevel);
+      });
+
+      google.maps.event.addListener(map, "rightclick", function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+        // populate yor box/field with lat, lng
+        alert("['', " + lat + ", " + lng + "],");
+      });
+
+      google.maps.event.addListener(map, 'zoom_changed', function() {
+        zoomLevel = map.getZoom();
+        console.log(zoomLevel);
+
+        if (zoomLevel > 3) {
+          for (it in region_markers) {
+            region_markers[it].setVisible(false);
+          }
+
+          markerCluster1.repaint();
+        } else {
+
+          for (var it in region_markers) {
+            region_markers[it].setVisible(true);
+          }
+
+          markerCluster1.repaint();
+        }
+
+        if (zoomLevel > 3 && zoomLevel < 6) {
+          for (it in area_markers) {
+            area_markers[it].setVisible(true);
+          }
+
+          for (it in town_markers) {
+            town_markers[it].setVisible(true);
+          }
+
+          markerCluster2.repaint();
+          markerCluster3.repaint();
+        } else {
+          for (it in area_markers) {
+            area_markers[it].setVisible(false);
+          }
+
+          for (it in town_markers) {
+            town_markers[it].setVisible(false);
+          }
+
+          markerCluster2.repaint();
+          markerCluster3.repaint();
+        }
+      });
+
+      var regions = [
+        ['Akkala', 53.65114992539623, 83.3642578125],
+        ['Central Hyrule', 0.26367094433665017, -5.537109375],
+        ['Eldin', 36.12900165569653, 44.307861328125],
+        ['Faron', -53.46189043285912, 21.07177734375],
+        ['Gerudo', -59.77852198502986, -90.3076171875],
+        ['Hebra', 50.65990836093937, -73.333740234375],
+        ['Lanayru', -14.381476281951622, 69.49951171875],
+        ['Necluda', -35.04798673426733, 48.614501953125]
+      ];
+
+      var areas = [
+        ['Akkala Highlands', 43.58039085560783, 78.75],
+        ['Akkala Sea', 59.44507509904713, 106.69921875],
+        ['Death Mountain', 52.05249047600099, 55.1953125],
+        ['Deep Akkala', 57.42129439209407, 76.46484375],
+        ['East Necluda', -48.92249926375824, 59.0625],
+        ['Eldin Canyon', 29.38217507514529, 39.7265625],
+        ['Faron Grasslands', -57.42129439209404, -10.72265625],
+        ['Faron Sea', -66.44310650816466, -1.40625],
+        ['Gerudo Desert', -60.67317856581772, -87.5390625],
+        ['Gerudo Highlands', -17.89511430374914, -90.263671875],
+        ['Great Hyrule Forest', 48.10743118848039, 7.734375],
+        ['Hebra Mountains', 54.059387886623576, -68.3349609375],
+        ['Hyrule Field', -13.154376055418517, -9.66796875],
+        ['Hyrule Ridge', 9.44906182688142, -52.998046875],
+        ['Lake Hylia', -47.8721439688873, -3.33984375],
+        ['Lanayru Great Spring', -4.915832801313165, 81.2109375],
+        ['Lanayru Sea', 3.5134210456400448, 100.8984375],
+        ['Lanayru Wetlands', 0, 37.08984375],
+        ['Mount Lanayru', -30.600093873550062, 85.95703125],
+        ['Necluda Sea', -53.120405283106564, 91.93359375],
+        ['Tabantha Frontier', 25.04579224030345, -75.234375],
+        ['Tabantha Tundra', 52.295042284537345, -39.1552734375],
+        ['West Necluda', -31.20340495091738, 29.00390625]
+      ];
+
+      var towns = [
+        ['Rito Village', 36.73888412439431, -79.617919921875],
+        ['Gerudo Town', -53.87844040332882, -84.638671875],
+        ['Lurelin Village', -60.44638185995601, 66.104736328125],
+        ['Hateno Village', -42.431565872579164, 79.112548828125],
+        ['Kakariko Village', -21.26889971996768, 39.83642578125],
+        ["Zora's Domain", 8.841651120809145, 71.7626953125],
+        ['Tarrey Town', 33.330528249028085, 87.110595703125],
+        ['Goron City', 47.81315451752767, 36.9140625],
+        ['Korok Forest', 42.49640294093705, 9.459228515625]
+      ];
+
+      var towers = [
+        ['Akkala', 31.316101383495624, 72.696533203125],
+        ['Central', -9.633245727691198, -17.38037109375],
+        ['Dueling Peaks', -35.26356186215208, 22.291259765625],
+        ['Eldin', 32.36140331527543, 47.757568359375],
+        ['Faron', -58.228596132481435, 29.28955078125],
+        ['Gerudo', -37.23032838760386, -80.672607421875],
+        ['Great Plateau', -34.86790496256872, -12.315673828125],
+        ['Hateno', -42.40723466155186, 60.05126953125],
+        ['Hebra', 40.70562793820589, -47.74658203125],
+        ['Lake', -54.39974815563758, -0.692138671875],
+        ['Lanayru', 2.4052990502867853, 49.603271484375],
+        ['Ridgeland', 16.81505795923194, -38.49609375],
+        ['Tabantha', 21.28937435586042, -79.420166015625],
+        ['Wasteland', -47.10004469402519, -50.82275390625],
+        ['Woodland', 33.29380355834659, 19.456787109375]
+      ];
+
+      var shrines = [
+        ["Akh Va'quot", 35.96911507577482, -80.33203125],
+        ["Dow Na'eh", -28.06228599981216, 59.271240234375],
+        ["Gee Ha'rah", 44.33956524809714, -52.393798828125],
+        ["Jitan Sa'mi", -27.741884632507073, 85.330810546875],
+        ["Ka'o Makagh", -60.97843744941454, 11.480712890625],
+        ["Kaam Ya'tak", -15.527790862993772, -21.2255859375],
+        ["Ke'nai Shakah", 18.437924653474408, 92.186279296875],
+        ["Korsh O'hu", -52.456009392640745, -59.150390625],
+        ["Maag No'rah", 30.524413269923986, -42.593994140625],
+        ["Mo'a Keet", 24.776759933219164, 59.886474609375],
+        ["Ne'ez Yohma", 11.31848056989431, 73.026123046875],
+        ["Saas Ko'sah", 24.56710835257599, -3.328857421875],
+        ["Shae Mo'sah", 48.99463598353405, 38.64990234375],
+        ["Ta'loh Naeg", -19.114029215761995, 40.5615234375],
+        ["Tahno O'ah", -34.777715803604686, 91.93359375],
+        ["Tena Ko'sah", 9.828154458476808, -76.0693359375],
+        ["Tu Ka'loh", 62.87017895189572, 102.3046875],
+        ['Bareeda Naag', 31.5691754490709, -79.332275390625],
+        ['Bosh Kala', -34.207259382072294, 1.77978515625],
+        ['Chaas Qeta', -54.724620194924476, 88.121337890625],
+        ['Daag Chokah', 47.43551915319531, -0.648193359375],
+        ['Dagah Keek', 9.102096738726456, 69.202880859375],
+        ['Dah Hesho', 27.46928747369202, 85.792236328125],
+        ['Daka Tuss', -10.131116841540678, 35.167236328125],
+        ['Dako Tah', -42.859859815062784, -72.872314453125],
+        ['Daqa Koh', 45.4524242413431, 45.3076171875],
+        ['Daqo Chisay', -52.52290594027806, -83.82568359375],
+        ['Dila Maag', -60.33238607249708, -39.451904296875],
+        ['Dunba Taag', 32.7503226078097, -62.29248046875],
+        ['Goma Asaagh', 53.3177490474909, -61.3916015625],
+        ['Gorae Torr', 60.25616696589458, 58.524169921875],
+        ['Ha Dahamar', -38.83114980934873, 36.507568359375],
+        ['Hawa Koth', -63.48976680530998, -106.45751953125],
+        ['Hia Miu', 63.80189351770543, -97.6904296875],
+        ['Hila Rao', -18.145851771694467, 18.78662109375],
+        ['Ishto Soh', -61.401978048598956, -21.62109375],
+        ['Ja Baij', -40.044437584608566, -9.7998046875],
+        ['Jee Noh', -46.882723010671945, -39.4189453125],
+        ['Joloo Nah', -34.43409789359468, -43.956298828125],
+        ['Kah Kaso', -34.97600151317588, -37.28759765625],
+        ['Kah Mael', 27.68352808378776, 103.502197265625],
+        ['Kah Okeo', 9.05870215639214, -90.52734375],
+        ['Kah Yah', -58.699775731440056, 75.487060546875],
+        ['Kam Urog', -31.156408414557, 54.942626953125],
+        ['Katah Chuki', 7.493196470122287, -14.051513671875],
+        ['Katosa Aug', 51.36492148825952, 94.317626953125],
+        ['Kay Noh', -45.03471477868861, -61.688232421875],
+        ['Kaya Wan', -4.105369348495166, 18.138427734375],
+        ['Kayra Mah', 40.871987756697415, 45.670166015625],
+        ['Keeha Yoog', -15.47485740268724, -84.627685546875],
+        ['Keh Namut', -40.01920130768676, -31.629638671875],
+        ['Kema Kosassa', -19.43551433909781, -102.403564453125],
+        ['Kema Zoos', -39.698734143481396, -102.777099609375],
+        ['Keo Ruug', 42.98053954751643, 10.30517578125],
+        ['Ketoh Wawai', 56.401744392758964, 6.30615234375],
+        ['Korgu Chideh', -63.51427544737997, 104.073486328125],
+        ['Kuh Takkar', -25.859223554761382, -67.6318359375],
+        ['Kuhn Sidajj', 39.172658670429946, 0.439453125],
+        ['Lakna Rokee', -20.85881179086769, 44.835205078125],
+        ['Lanno Kooh', 41.236511201246216, -57.89794921875],
+        ['Maag Halan', 46.9502622421856, 18.380126953125],
+        ['Maka Rah', 48.09275716032735, -89.09912109375],
+        ['Mezza Lo', -8.309341443917633, 57.6123046875],
+        ['Mijah Rokee', -4.882994243904852, -60.35888671875],
+        ['Mirro Shaz', 25.69103802005013, 27.0263671875],
+        ['Misae Suma', -63.59744766560199, -65.3466796875],
+        ['Mogg Latan', -10.04458498421179, -50.51513671875],
+        ['Monya Toma', 30.789036751261136, -32.706298828125],
+        ['Mozo Shenno', 55.397831459360326, -79.705810546875],
+        ['Muwo Jeem', -58.57970885637573, 80.364990234375],
+        ['Myahm Agana', -43.71553472620511, 74.454345703125],
+        ['Namika Ozz', 17.78007412664325, 16.72119140625],
+        ['Noya Neha', 13.581920900545844, -20.91796875],
+        ['Oman Au', -31.512995857454666, -14.776611328125],
+        ['Owa Daim', -45.367584368849776, -20.2587890625],
+        ['Pumaag Nitae', -54.724620194924476, 12.337646484375],
+        ['Qaza Tokki', 61.09547901951209, -18.0615234375],
+        ['Qua Raym', 31.644028945047822, 40.05615234375],
+        ['Qukah Nata', -58.32102986925195, 44.088134765625],
+        ['Raqa Zunzo', -56.413901376006756, -83.660888671875],
+        ['Ree Dahee', -37.49229399862877, 28.004150390625],
+        ['Rin Oyaa', 48.850258199721495, -37.781982421875],
+        ['Ritaag Zumo', 42.39912215986001, 99.51416015625],
+        ['Rok Uwog', 57.645400667406605, -52.1630859375],
+        ['Rona Kachta', 50.3734961443035, -23.917236328125],
+        ['Rota Ooh', -27.664068965384512, -34.376220703125],
+        ['Rucco Maag', -9.373192635083443, 73.23486328125],
+        ['Sah Dahaj', 32.80574473290688, 58.5791015625],
+        ['Sasa Kai', -39.43619299931407, -78.233642578125],
+        ['Sha Gehma', 63.386600640372414, -36.76025390625],
+        ['Sha Warvo', 43.59630591596548, -83.95751953125],
+        ['Shada Naw', 57.61010702068388, -65.89599609375],
+        ['Shae Katha', -45.49094569262731, 19.16015625],
+        ['Shae Loya', 9.481572085088517, -64.346923828125],
+        ['Shai Utoh', -61.897577621605016, 34.8046875],
+        ['Shai Yota', -5.5175752008306205, 93.27392578125],
+        ['Shee Vaneer', -39.1896908210968, 27.7294921875],
+        ['Shee Venath', -37.60552821745788, 27.344970703125],
+        ['Sheem Dagoze', -2.1198775074231926, -41.68212890625],
+        ['Sheh Rata', 8.28759884935513, 33.15673828125],
+        ['Sho Dantu', -34.12544756511611, -85.9130859375],
+        ['Shoda Sah', -54.80701713846255, 39.342041015625],
+        ['Shoqa Tatone', -64.16331938811743, 2.142333984375],
+        ['Shora Hah', 56.3409012041991, 33.739013671875],
+        ['Soh Kofi', 6.402648405963896, 49.141845703125],
+        ['Suma Sahma', -60.190694753105745, -31.190185546875],
+        ['Tah Muhl', 20.29311344754411, 50.504150390625],
+        ['Tawa Jinn', -52.70301871296325, 57.908935546875],
+        ['Tho Kayu', -52.25470880113082, -105.3369140625],
+        ['To Quomo', 62.925235662542946, -88.35205078125],
+        ['Toh Yahsa', 19.476950206488414, -49.85595703125],
+        ['Toto Sah', -47.65058757118733, 40.517578125],
+        ['Tutsuwa Nima', 50.944584434950116, 82.99072265625],
+        ['Voo Lota', 35.290468565908775, -88.2861328125],
+        ['Wahgo Katta', -21.596150576461426, 7.55859375],
+        ['Ya Naga', -49.496674527470425, -7.218017578125],
+        ['Yah Rin', -58.63693504810121, 62.20458984375],
+        ['Zalta Wa', 12.897489183755892, -31.541748046875],
+        ['Ze Kasho', 34.4069096565206, 66.42333984375],
+        ['Zuna Kai', 59.85585085709834, 73.026123046875]
+      ];
+
+      var markerCluster1 = new MarkerClusterer(map, region_markers),
+        markerCluster2 = new MarkerClusterer(map, area_markers),
+        markerCluster3 = new MarkerClusterer(map, town_markers),
+        markerCluster4 = new MarkerClusterer(map, tower_markers),
+        markerCluster5 = new MarkerClusterer(map, shrine_markers);
+
+      setMarkers(map);
+
+      function setMarkers(map) {
+        for (var i = 0; i < regions.length; i++) {
+          var place = regions[i];
+          var marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            label: {
+              text: place[0],
+              color: '#b5a268',
+              fontSize: '20px'
+            },
+            icon: 'transparent.gif'
+          });
+          region_markers.push(marker);
+        }
+
+        for (i = 0; i < areas.length; i++) {
+          place = areas[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            label: {
+              text: place[0],
+              color: '#b5a268',
+              fontSize: '20px'
+            },
+            icon: 'transparent.gif',
+            visible: false
+          });
+          area_markers.push(marker);
+        }
+
+        for (i = 0; i < towns.length; i++) {
+          place = towns[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',
+            visible: false
+          });
+          town_markers.push(marker);
+        }
+
+        for (i = 0; i < towers.length; i++) {
+          place = towers[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/purplef.png'
+          });
+          tower_markers.push(marker);
+        }
+
+        for (i = 0; i < shrines.length; i++) {
+          place = shrines[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+          });
+          shrine_markers.push(marker);
+        }
+      }
+    };
+
+    function toggleGroup(type) {
+      for (var i = 0; i < markerGroups[type].length; i++) {
+        var marker = markerGroups[type][i];
+        if (marker.isHidden()) {
+          marker.show();
+        } else {
+          marker.hide();
+        }
+      }
+    }
+  </script>
+
+</body>
+
 </html>
