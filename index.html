@@ -109,7 +109,7 @@
                   new google.maps.Point(0, 0),
                   new google.maps.Point(16, 16));
 
-    var skull_orange = new google.maps.MarkerImage('skull_orange.png',
+    var skull_purple = new google.maps.MarkerImage('skull_purple.png',
                   new google.maps.Size(32, 32),
                   new google.maps.Point(0, 0),
                   new google.maps.Point(16, 16));
@@ -247,7 +247,7 @@
         var lat = event.latLng.lat();
         var lng = event.latLng.lng();
         // populate yor box/field with lat, lng
-        alert("['', " + lat + ", " + lng + "],");
+        prompt("Text to be copied:", "['', " + lat + ", " + lng + "],");
       });
 
       google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -321,6 +321,10 @@
         ['West Necluda', -31.20340495091738, 29.00390625]
       ];
 
+      var areas2 = [
+
+      ];      
+
       var towns = [
         ['Rito Village', 36.73888412439431, -79.617919921875],
         ['Gerudo Town', -53.87844040332882, -84.638671875],
@@ -339,7 +343,8 @@
       ];
 
       var other = [
-
+        ['Flight Range', 44.85586880735725, -84.671630859375],
+        ['Forgotten Temple', 45.166547157856016, -30.465087890625],
       ];
 
       var stables = [
@@ -502,7 +507,16 @@
       ];
 
       var koroks = [
-        ['', 53.54683559190011, -61.14990234375]
+        ['', 53.54683559190011, -61.14990234375],
+        ['', 43.834526782236814, -30.948486328125],
+        ['', 44.34742225636393, -60.49072265625],
+        ['', 46.521075663842865, -63.336181640625],
+        ['', 48.14409793493888, -63.687744140625],
+        ['', 49.26780455063753, -60.128173828125],
+        ['', 54.83233630197033, -73.6083984375],
+        ['', 63.40136142059639, -88.52783203125],
+        ['', 61.96478000580182, -87.901611328125],
+        ['', 63.5191746526972, -96.5478515625],
       ];
 
       var lynel = [
@@ -696,7 +710,7 @@
               lng: place[2]
             },
             map: map,
-            icon: skull_orange
+            icon: skull_purple
           });
           hinox_markers.push(marker);
         }
