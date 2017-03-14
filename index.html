@@ -31,12 +31,15 @@
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
   <script type="text/javascript">
-    var repeatOnXAxis = false,
+    var area_markers = [],
+      hinox_markers = [],
+      lynel_markers = [],
       region_markers = [],
-      area_markers = [],
-      town_markers = [],
-      tower_markers = [],
       shrine_markers = [],
+      stable_markers = [],
+      tower_markers = [],
+      town_markers = [],
+      repeatOnXAxis = false,
       minZoomLevel = 3;
 
     function getNormalizedCoord(coord, zoom) {
@@ -139,14 +142,14 @@
             region_markers[it].setVisible(false);
           }
 
-          markerCluster1.repaint();
+          markerRegion.repaint();
         } else {
 
           for (var it in region_markers) {
             region_markers[it].setVisible(true);
           }
 
-          markerCluster1.repaint();
+          markerRegion.repaint();
         }
 
         if (zoomLevel > 3 && zoomLevel < 6) {
@@ -154,23 +157,13 @@
             area_markers[it].setVisible(true);
           }
 
-          for (it in town_markers) {
-            town_markers[it].setVisible(true);
-          }
-
-          markerCluster2.repaint();
-          markerCluster3.repaint();
+          markerArea.repaint();
         } else {
           for (it in area_markers) {
             area_markers[it].setVisible(false);
           }
 
-          for (it in town_markers) {
-            town_markers[it].setVisible(false);
-          }
-
-          markerCluster2.repaint();
-          markerCluster3.repaint();
+          markerArea.repaint();
         }
       });
 
@@ -221,6 +214,24 @@
         ['Tarrey Town', 33.330528249028085, 87.110595703125],
         ['Goron City', 47.81315451752767, 36.9140625],
         ['Korok Forest', 42.49640294093705, 9.459228515625]
+      ];
+
+      var stables = [
+        ['Dueling Peaks', -38.925229047140526, 38.770751953125],
+        ['East Akkala', 51.59754765771458, 92.96630859375],
+        ['Foothill', 24.377120839610388, 57.381591796875],
+        ['Gerudo Canyon', -43.81074731344698, -61.5673828125],
+        ['Highland', -60.217990733234444, 11.66748046875],
+        ['Lakeside', -61.143235250840576, 34.12353515625],
+        ['Outskirt', -26.79465448763807, -31.849365234375],
+        ['Rito', 35.96911507577482, -71.455078125],
+        ['Riverside', -23.422928455065247, 7.44873046875],
+        ['Serenne', 36.659606226479696, -34.222412109375],
+        ['Snowfield', 49.088257784724675, -36.375732421875],
+        ['South Akkala', 34.813803317113155, 69.23583984375],
+        ['Tabantha Bridge', 11.888853082975968, -64.40185546875],
+        ['Wetland', -3.7765593098768635, 19.423828125],
+        ['Woodland', 24.31706530687605, 23.40087890625]
       ];
 
       var towers = [
@@ -364,11 +375,37 @@
         ['Zuna Kai', 59.85585085709834, 73.026123046875]
       ];
 
-      var markerCluster1 = new MarkerClusterer(map, region_markers),
-        markerCluster2 = new MarkerClusterer(map, area_markers),
-        markerCluster3 = new MarkerClusterer(map, town_markers),
-        markerCluster4 = new MarkerClusterer(map, tower_markers),
-        markerCluster5 = new MarkerClusterer(map, shrine_markers);
+      var lynel = [
+        ['', 62.047287900832714, -44.14306640625],
+        ['', 61.25966921642909, -36.749267578125],
+        ['', 61.217379387631915, -28.916015625],
+        ['', 63.40627999376422, 26.4111328125],
+        ['', 12.618897304044024, 85.0341796875],
+        ['', 5.954826733929924, -63.52294921875],
+        ['', -19.4665922322076, -88.714599609375],
+        ['', -23.110049297356728, -66.895751953125],
+        ['', -26.74561038219901, -25.3125],
+        ['', -25.69103802005013, 71.773681640625],
+        ['', -57.11835002634523, -18.621826171875],
+        ['', -62.339410577528696, -17.05078125]
+      ];
+
+      var hinox = [
+        ['', -56.00452420115398, 32.7392578125],
+        ['', -51.99841038239032, 53.250732421875],
+        ['', -51.08972291811632, 60.84228515625],
+        ['', -54.47642158429293, 59.139404296875],
+        ['', -54.838663612975104, 70.48828125],
+        ['', -62.8250556145643, 99.931640625]
+      ];
+
+      var markerRegion = new MarkerClusterer(map, region_markers),
+        markerArea = new MarkerClusterer(map, area_markers),
+        markerTown = new MarkerClusterer(map, town_markers),
+        markerTower = new MarkerClusterer(map, tower_markers),
+        markerShrine = new MarkerClusterer(map, shrine_markers),
+        markerLynel = new MarkerClusterer(map, lynel_markers),
+        markerHinox = new MarkerClusterer(map, hinox_markers);
 
       setMarkers(map);
 
@@ -418,10 +455,22 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/red.png',
-            visible: false
+            icon: 'https://maps.google.com/mapfiles/ms/icons/red.png'
           });
           town_markers.push(marker);
+        }
+
+        for (i = 0; i < stables.length; i++) {
+          place = stables[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/pink.png'
+          });
+          stable_markers.push(marker);
         }
 
         for (i = 0; i < towers.length; i++) {
@@ -432,7 +481,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/purplef.png'
+            icon: 'https://maps.google.com/mapfiles/ms/icons/purple.png'
           });
           tower_markers.push(marker);
         }
@@ -445,9 +494,35 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+            icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png'
           });
           shrine_markers.push(marker);
+        }
+
+        for (i = 0; i < lynel.length; i++) {
+          place = lynel[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/yellow.png'
+          });
+          lynel_markers.push(marker);
+        }
+
+        for (i = 0; i < hinox.length; i++) {
+          place = hinox[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/orange.png'
+          });
+          hinox_markers.push(marker);
         }
       }
     };
