@@ -23,11 +23,64 @@
       text-align: center;
       font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
     }
+
+    #options-container
+    {
+      position: fixed;
+      bottom: 0px;  
+    }
+
+    .sub-container
+    {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+
+    .options-window
+    {
+      background:#fff;  
+      height:200px;
+      width:250px;  
+      border:1px solid #ACD8F0;  
+      overflow:scroll;
+      overflow-x: hidden;
+    }
+
+    .options-banner
+    {
+      background:#055816; 
+      height:25px;
+      width: 250px;
+      border:1px solid #ACD8F0;
+      text-align: center;
+    }
+
+    button.link 
+    { 
+      background:white; 
+      position:relative; 
+      left:120px
+    }
   </style>
 </head>
 
 <body>
   <div id="map"><span class="loading">loading tiles...</span></div>
+  <div id="options-container">
+    <div id="options-container-A" class="sub-container">
+      <div class="options-banner" id="min-A" onclick="minWindow(this);"><font color="white"> Legend </font>
+      </div>
+      <div class="options-window" id="options-window-A"> </div>
+    </div>
+      
+      
+    <div id="options-container-B" class="sub-container">
+      <div class="options-banner" id="min-B" onclick="minWindow(this);"><font color="white"> Options </font>
+      </div>
+      <div class="options-window" id="options-window-B"> </div>
+      </div>
+  </div>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
   <script type="text/javascript">
@@ -41,6 +94,11 @@
       town_markers = [],
       repeatOnXAxis = false,
       minZoomLevel = 3;
+
+    function minWindow(elem) {
+      var Id = $(elem).attr("id").replace("min-", "options-window-");
+      $('#' + Id).slideToggle();
+    }
 
     function getNormalizedCoord(coord, zoom) {
       if (!repeatOnXAxis) return coord;
