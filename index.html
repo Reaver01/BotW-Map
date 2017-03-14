@@ -39,8 +39,8 @@
     .options-window
     {
       background:#fff;  
-      height:200px;
-      width:250px;  
+      height:auto;
+      width:150px;  
       border:1px solid #ACD8F0;  
       overflow:scroll;
       overflow-x: hidden;
@@ -50,7 +50,7 @@
     {
       background:#055816; 
       height:25px;
-      width: 250px;
+      width:150px;
       border:1px solid #ACD8F0;
       text-align: center;
     }
@@ -66,29 +66,34 @@
 
 <body>
   <div id="map"><span class="loading">loading tiles...</span></div>
-  <!--
   <div id="options-container">
     <div id="options-container-A" class="sub-container">
       <div class="options-banner" id="min-A" onclick="minWindow(this);"><font color="white"> Legend </font>
       </div>
-      <div class="options-window" id="options-window-A"> </div>
+      <div class="options-window" id="options-window-A">
+      <img src="skull_red.png" alt="" align="top">Lynel<br>
+      <img src="skull_orange.png" alt="" align="top">Hinox<br>
+      <img src="skull_blue.png" alt="" align="top">Talus<br>
+      </div>
     </div>
-      
-      
+  <!--
     <div id="options-container-B" class="sub-container">
       <div class="options-banner" id="min-B" onclick="minWindow(this);"><font color="white"> Options </font>
       </div>
       <div class="options-window" id="options-window-B"> </div>
       </div>
-  </div>
   -->
+  </div>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
   <script type="text/javascript">
     var area_markers = [],
       hinox_markers = [],
+      korok_markers = [],
+      lab_markers = [],
       lynel_markers = [],
+      other_markers = [],
       region_markers = [],
       shrine_markers = [],
       stable_markers = [],
@@ -276,6 +281,14 @@
         ['Korok Forest', 42.49640294093705, 9.459228515625]
       ];
 
+      var labs = [
+
+      ];
+
+      var other = [
+
+      ];
+
       var stables = [
         ['Dueling Peaks', -38.925229047140526, 38.770751953125],
         ['East Akkala', 51.59754765771458, 92.96630859375],
@@ -435,6 +448,10 @@
         ['Zuna Kai', 59.85585085709834, 73.026123046875]
       ];
 
+      var koroks = [
+        ['', 53.54683559190011, -61.14990234375]
+      ];
+
       var lynel = [
         ['', 62.047287900832714, -44.14306640625],
         ['', 61.25966921642909, -36.749267578125],
@@ -520,6 +537,32 @@
           town_markers.push(marker);
         }
 
+        for (i = 0; i < other.length; i++) {
+          place = other[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en'
+          });
+          other_markers.push(marker);
+        }
+
+        for (i = 0; i < labs.length; i++) {
+          place = labs[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en'
+          });
+          lab_markers.push(marker);
+        }
+
         for (i = 0; i < stables.length; i++) {
           place = stables[i];
           marker = new google.maps.Marker({
@@ -557,6 +600,19 @@
             icon: 'http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en'
           });
           shrine_markers.push(marker);
+        }
+
+        for (i = 0; i < koroks.length; i++) {
+          place = koroks[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: 'korok.png'
+          });
+          korok_markers.push(marker);
         }
 
         for (i = 0; i < lynel.length; i++) {
