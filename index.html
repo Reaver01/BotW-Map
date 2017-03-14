@@ -66,6 +66,7 @@
 
 <body>
   <div id="map"><span class="loading">loading tiles...</span></div>
+  <!--
   <div id="options-container">
     <div id="options-container-A" class="sub-container">
       <div class="options-banner" id="min-A" onclick="minWindow(this);"><font color="white"> Legend </font>
@@ -80,6 +81,7 @@
       <div class="options-window" id="options-window-B"> </div>
       </div>
   </div>
+  -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
@@ -513,7 +515,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/red.png'
+            icon: 'https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en'
           });
           town_markers.push(marker);
         }
@@ -526,7 +528,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/pink.png'
+            icon: 'http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/32?cb=20170308170323&path-prefix=en'
           });
           stable_markers.push(marker);
         }
@@ -539,7 +541,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/purple.png'
+            icon: 'https://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en'
           });
           tower_markers.push(marker);
         }
@@ -552,7 +554,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/blue.png'
+            icon: 'http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en'
           });
           shrine_markers.push(marker);
         }
@@ -565,7 +567,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/yellow.png'
+            icon: 'skull_red.png'
           });
           lynel_markers.push(marker);
         }
@@ -578,7 +580,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://maps.google.com/mapfiles/ms/icons/orange.png'
+            icon: 'skull_orange.png'
           });
           hinox_markers.push(marker);
         }
@@ -600,3 +602,62 @@
 </body>
 
 </html>
+
+<!--
+Markers:
+http://vignette2.wikia.nocookie.net/nintendo/images/6/6a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Armor.svg/revision/latest/scale-to-width-down/120?cb=20170308170128&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/6/6e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Cold_resistance_2.svg/revision/latest/scale-to-width-down/120?cb=20170308170129&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/a/a4/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Cold_resistance.svg/revision/latest/scale-to-width-down/120?cb=20170308170130&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/5/56/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Durable.svg/revision/latest/scale-to-width-down/120?cb=20170308170130&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/1/19/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Flame_guard_effect.svg/revision/latest/scale-to-width-down/120?cb=20170308170131&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/a/a6/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Heat_resistance.svg/revision/latest/scale-to-width-down/120?cb=20170308170131&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/8/81/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Horse_energy.svg/revision/latest/scale-to-width-down/120?cb=20170308170132&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/c/cc/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Armor_Shop.svg/revision/latest/scale-to-width-down/120?cb=20170308170132&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/e/e8/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Dye_Shop.svg/revision/latest/scale-to-width-down/120?cb=20170308170133&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/f/f3/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_General_Store.svg/revision/latest/scale-to-width-down/120?cb=20170308170133&path-prefix=en
+
+http://vignette2.wikia.nocookie.net/nintendo/images/f/fb/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Inn.svg/revision/latest/scale-to-width-down/120?cb=20170308170134&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/3/3f/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Jewelry.svg/revision/latest/scale-to-width-down/120?cb=20170308170134&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/7/78/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Link%27s_current_horse.svg/revision/latest/scale-to-width-down/120?cb=20170308170135&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/7/7b/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Other_landmark.svg/revision/latest/scale-to-width-down/120?cb=20170308170136&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/d/d5/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Pin_1.svg/revision/latest/scale-to-width-down/120?cb=20170308170136&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/7/70/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Pin_2.svg/revision/latest/scale-to-width-down/120?cb=20170308170137&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/b/b8/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Pin_3.svg/revision/latest/scale-to-width-down/120?cb=20170308170138&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/0/0c/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Pin_4.svg/revision/latest/scale-to-width-down/120?cb=20170308170138&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/c/c9/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Pin_5.svg/revision/latest/scale-to-width-down/120?cb=20170308170138&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/a/ab/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Quest_waypoint.svg/revision/latest/scale-to-width-down/120?cb=20170308170321&path-prefix=en
+
+http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/120?cb=20170308170322&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/0/05/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28not_completed%29.svg/revision/latest/scale-to-width-down/120?cb=20170308170322&path-prefix=en
+
+http://vignette2.wikia.nocookie.net/nintendo/images/1/1e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28not_unlocked%29.svg/revision/latest/scale-to-width-down/120?cb=20170308170323&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/120?cb=20170308170323&path-prefix=en
+
+http://vignette1.wikia.nocookie.net/nintendo/images/c/cb/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stamp.svg/revision/latest/scale-to-width-down/120?cb=20170308170324&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/120?cb=20170308170324&path-prefix=en
+
+http://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/120?cb=20170308170324&path-prefix=en
+
+http://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/120?cb=20170308170325&path-prefix=en
+-->
