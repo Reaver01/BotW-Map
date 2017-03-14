@@ -1,0 +1,57 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  color: #CCC;
+  background: #EFEFEF;
+}
+
+span.loading {
+  display: block;
+  text-align: center;
+  font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+}
+
+#options-container
+{
+  position: fixed;
+  bottom: 0px;  
+}
+
+.sub-container
+{
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.options-window
+{
+  background:#fff;  
+  height:auto;
+  width:150px;  
+  border:1px solid #ACD8F0;  
+  overflow:scroll;
+  overflow-x: hidden;
+}
+
+.options-banner
+{
+  background:#055816; 
+  height:25px;
+  width:150px;
+  border:1px solid #ACD8F0;
+  text-align: center;
+}
+
+button.link 
+{ 
+  background:white; 
+  position:relative; 
+  left:120px
+}
