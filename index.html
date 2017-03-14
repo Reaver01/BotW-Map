@@ -62,6 +62,15 @@
       position:relative; 
       left:120px
     }
+
+    .labels
+    {
+      text-shadow:
+          -1px -1px 0 #000,
+          1px -1px 0 #000,
+          -1px 1px 0 #000,
+          1px 1px 0 #000; 
+    }
   </style>
 </head>
 
@@ -253,7 +262,6 @@
 
       google.maps.event.addListener(map, 'zoom_changed', function() {
         zoomLevel = map.getZoom();
-        console.log(zoomLevel);
 
         if (zoomLevel > 3) {
           for (it in region_markers) {
@@ -298,6 +306,21 @@
 
           markerArea2.repaint();
         }
+
+        if (zoomLevel > 4) {
+          for (it in korok_markers) {
+            korok_markers[it].setVisible(true);
+          }
+
+          markerKorok.repaint();
+        } else {
+
+          for (it in korok_markers) {
+            korok_markers[it].setVisible(false);
+          }
+
+          markerKorok.repaint();
+        }
       });
 
       var regions = [
@@ -338,21 +361,93 @@
       ];
 
       var areas2 = [
-        ['Icefall Foothills', 63.134503208334465, -95.712890625],
-        ['Hebra Great Skeleton', 62.69430959366319, -88.35205078125],
-        ['Hebra North Summit', 61.876870214633044, -88.13232421875],
-        ['Hebra North Crest', 63.28306240110864, -78.0029296875],
-        ['Hebra Tundra', 58.459228692360625, -74.81689453125],
-        ['Hebra West Summit', 56.824932865007206, -97.27294921875],
-        ['Biron Snowshelf', 54.59752785211386, -81.73828125],
-        ['Sturnida Basin', 53.06762664238738, -89.93408203125],
+        ["Dragon's Exile", -62.09360043551697, -102.65625],
+        ["Dronoc's Pass", 44.08758502824516, -83.3203125],
+        ["Hemaar's Descent", -3.2940822283128046, -93.251953125],
+        ["Meadela's Mantle", -27.352252938063835, -90.54931640625],
+        ["Mystathi's Shelf", -9.275622176792098, -88.1982421875],
+        ["Sapphia's Table", -32.60236166681751, -69.27978515625],
         ["Selmie's Spot", 56.656226493502224, -64.84130859375],
-        ['Hebra Peak', 53.50111704294316, -60.84228515625],
-        ['Hebra East Summit', 55.36662484928637, -61.34765625],
+        ["Warbler's Nest", 35.862343734896484, -87.703857421875],
+        ["Washa's Bluff", -1.9771465537125645, -59.94140625],
+        ['Ancient Columns', 9.438224391343347, -78.519287109375],
+        ['Birida Lookout', -37.96152331396613, -76.519775390625],
+        ['Biron Snowshelf', 54.59752785211386, -81.73828125],
+        ['Biron Snowshelf', 54.97761367069628, -88.8134765625],
         ['Coldsnap Hollow', 54.18815548107151, -67.763671875],
-        ['Pikida Stonegrove', 57.028773851491124, -50.86669921875],
+        ['Cuho Mountain', 27.858503954841247, -84.232177734375],
+        ['Dragon Bone Mire', 35.263561862152095, -91.8896484375],
+        ['Footrace Check-In', 24.806681353851967, -58.370361328125],
+        ['Gerudo Desert Gateway', -45.49094569262731, -63.9404296875],
+        ['Gerudo Great Skeleton', -62.96021795576576, -105.985107421875],
+        ['Gerudo Summit', -15.390135715305204, -89.6484375],
+        ['Great Cliffs', -44.19795903948529, -72.9931640625],
+        ['Great Fairy Fountain', -64.14416108450797, -107.215576171875],
+        ['Great Fairy Fountain', 16.161920953785344, -77.816162109375],
+        ['Hebra East Summit', 55.36662484928637, -61.34765625],
+        ['Hebra Falls', 45.413876460821086, -60.57861328125],
+        ['Hebra Falls', 47.938426929481054, -63.5009765625],
+        ['Hebra Great Skeleton', 62.69430959366319, -88.35205078125],
+        ['Hebra Headspring', 46.807579571992385, -62.325439453125],
+        ['Hebra North Crest', 63.28306240110864, -78.0029296875],
+        ['Hebra North Summit', 61.876870214633044, -88.13232421875],
+        ['Hebra Peak', 53.50111704294316, -60.84228515625],
+        ['Hebra Plunge', 40.1452892956766, -63.0615234375],
+        ['Hebra Plunge', 42.17968819665961, -67.763671875],
+        ['Hebra Trailhead Lodge', 44.6061127451739, -78.55224609375],
+        ['Hebra Tundra', 58.459228692360625, -74.81689453125],
+        ['Hebra West Summit', 51.248163159055906, -97.31689453125],
+        ['Hebra West Summit', 56.824932865007206, -97.27294921875],
+        ['Icefall Foothills', 63.134503208334465, -95.712890625],
+        ['Illumeni Plateau', -0.5493079911125155, -68.40087890625],
+        ['Karusa Valley', -37.75334401310657, -94.72412109375],
+        ['Kolami Bridge', 27.137368359795584, -68.53271484375],
         ['Kopeeki Drifts', 48.13676667969269, -52.6904296875],
-        ['Hebra Headspring', 47.234489635299184, -62.86376953125],
+        ['Lake Illumeni', -3.2940822283128046, -77.816162109375],
+        ['Lake Kilsie', 46.07323062540835, -90.3076171875],
+        ['Lake Kilsie', 48.719961222646276, -86.4404296875],
+        ['Lake Kilsie', 51.76783988732215, -85.80322265625],
+        ['Lake Totori', 35.71975793933433, -82.37548828125],
+        ['Lake Totori', 39.147102707700746, -79.21142578125],
+        ['Laparoh Mesa', -25.60190226111573, -64.70947265625],
+        ['Mount Agaat', -18.750309813140653, -108.6328125],
+        ['Nero Hill', 20.34462694382967, -79.9365234375],
+        ['Northern Icehouse', -44.87144275016588, -82.41943359375],
+        ['Palu Wasteland', -54.54657953840501, -68.6865234375],
+        ['Passer Hill', 33.33970700424027, -88.033447265625],
+        ['Pikida Stonegrove', 53.48804553605621, -48.460693359375],
+        ['Pikida Stonegrove', 57.028773851491124, -50.86669921875],
+        ['Piper Ridge', 14.764259178591587, -76.35498046875],
+        ['Rayne Highlands', 10.487811882056695, -83.638916015625],
+        ['Rayne Highlands', 15.623036831528264, -85.4736328125],
+        ['Risoka Snowfield', -16.214674588248542, -99.580078125],
+        ['Risoka Snowfield', -23.281719175600006, -100.283203125],
+        ['Rospro Pass', 45.96642454131025, -78.59619140625],
+        ['Rutimala Hill', -29.68805274985679, -99.68994140625],
+        ['Sand-Seal Rally', -57.25528054528888, -83.221435546875],
+        ['Southern Oasis', -61.94411809102373, -82.012939453125],
+        ['Statue of the Eighth Heroine', -10.854886268472447, -95.9326171875],
+        ['Strock Lake', 29.973970240516614, -71.34521484375],
+        ['Sturnida Basin', 53.06762664238738, -89.93408203125],
+        ['Taafei Hill', -37.03763967977139, -61.7431640625],
+        ['Tabantha Great Bridge', 12.64033830684679, -68.642578125],
+        ['Tabantha Hills', 37.23032838760387, -54.73388671875],
+        ['Talonto Peak', 50.59021193935189, -69.532470703125],
+        ['Tama Pond', 38.35888785866677, -65.19287109375],
+        ['Tamio River', -12.125264218331578, -64.53369140625],
+        ['Tanagar Canyon Course', 13.7313809749427, -68.6865234375],
+        ['Tanagar Canyon Course', 22.451648819126202, -65.93994140625],
+        ['Tanagar Canyon', 10.444597722834875, -68.57666015625],
+        ['Tanagar Canyon', 25.005972656239187, -64.248046875],
+        ['Tanagar Canyon', 3.7984839750369748, -76.717529296875],
+        ['Tanagar Canyon', 32.91648534731439, -50.350341796875],
+        ['Tanagar Canyon', 4.083452772038619, -86.572265625],
+        ['Torma Dunes', -51.43346414054372, -104.556884765625],
+        ['Upland Lindor', 26.931865156388916, -56.09619140625],
+        ['Upland Lindor', 28.246327971048846, -49.251708984375],
+        ['Vatorsa Snowfield', -23.96617587126503, -76.563720703125],
+        ['West Barrens', -48.09275716032735, -100.01953125],
+        ['West Gerudo Ruins', -45.042478050891525, -98.23974609375]
       ];
 
       var towns = [
@@ -551,7 +646,13 @@
         ['Korok', 63.40136142059639, -88.52783203125],
         ['Korok', 61.96478000580182, -87.901611328125],
         ['Korok', 63.5191746526972, -96.5478515625],
-        ['Korok', -37.64033489805947, 27.61962890625]
+        ['Korok', -37.64033489805947, 27.61962890625],
+        ['Korok', 34.542762387234845, -89.296875],
+        ['Korok', 36.923547681089296, -79.7607421875],
+        ['Korok', 37.909533616770176, -83.056640625],
+        ['Korok', 34.67839374011646, -81.2109375],
+        ['Korok', -60.29429873400916, -94.647216796875],
+        ['Korok', -63.34227272786899, -66.64306640625],
       ];
 
       var lynel = [
@@ -568,7 +669,8 @@
         ['Lynel', 61.217379387631915, -28.916015625],
         ['Lynel', 61.25966921642909, -36.749267578125],
         ['Lynel', 62.047287900832714, -44.14306640625],
-        ['Lynel', 63.40627999376422, 26.4111328125]
+        ['Lynel', 63.40627999376422, 26.4111328125],
+        ['Lynel', 62.36999628130772, 5.042724609375]
       ];
 
       var hinox = [
@@ -617,6 +719,7 @@
         markerTown = new MarkerClusterer(map, town_markers),
         markerOther = new MarkerClusterer(map, other_markers),
         markerLab = new MarkerClusterer(map, lab_markers),
+        markerKorok = new MarkerClusterer(map, korok_markers),
         markerTower = new MarkerClusterer(map, tower_markers),
         markerShrine = new MarkerClusterer(map, shrine_markers),
         markerLynel = new MarkerClusterer(map, lynel_markers),
@@ -634,6 +737,7 @@
               lng: place[2]
             },
             map: map,
+            labelClass: "labels",
             label: {
               text: place[0],
               color: '#b5a268',
@@ -652,6 +756,7 @@
               lng: place[2]
             },
             map: map,
+            labelClass: "labels",
             label: {
               text: place[0],
               color: '#b5a268',
@@ -671,6 +776,7 @@
               lng: place[2]
             },
             map: map,
+            labelClass: "labels",
             label: {
               text: place[0],
               color: '#b5a268',
@@ -768,7 +874,8 @@
               lng: place[2]
             },
             map: map,
-            icon: 'korok.png'
+            icon: icon_korok,
+            visible: false
           });
           korok_markers.push(marker);
         }
