@@ -72,9 +72,10 @@
       <div class="options-banner" id="min-A" onclick="minWindow(this);"><font color="white"> Legend </font>
       </div>
       <div class="options-window" id="options-window-A">
-      <img src="skull_red.png" alt="" align="top">Lynel<br>
-      <img src="skull_orange.png" alt="" align="top">Hinox<br>
-      <img src="skull_blue.png" alt="" align="top">Talus<br>
+      <img src="korok.png" alt="" align="top">Korok - <span id="korok_count"></span><br>
+      <img src="skull_red.png" alt="" align="top">Lynel - <span id="lynel_count"></span><br>
+      <img src="skull_orange.png" alt="" align="top">Hinox - <span id="hinox_count"></span><br>
+      <img src="skull_blue.png" alt="" align="top">Talus - <span id="talus_count"></span><br>
       </div>
     </div>
   <!--
@@ -764,6 +765,11 @@
         ['Talus', 53.76170183021049, -67.7197265625],
         ['Talus', 55.5534954584537, 29.42138671875]
       ];
+
+      document.getElementById("korok_count").innerHTML = koroks.length;
+      document.getElementById("lynel_count").innerHTML = lynel.length;
+      document.getElementById("hinox_count").innerHTML = hinox.length;
+      document.getElementById("talus_count").innerHTML = talus.length;
 
       var markerRegion = new MarkerClusterer(map, region_markers),
         markerArea = new MarkerClusterer(map, area_markers),
