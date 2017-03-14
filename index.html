@@ -3,6 +3,7 @@
 
 <head>
   <title>Breath of the Wild - Map of Hyrule</title>
+  <meta charset="utf-8">
   <style type="text/css">
     html,
     body {
@@ -85,7 +86,7 @@
   -->
   </div>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3vzY1z8BLFXbc3sg9-vQTK5wYYe5VT3s"></script>
   <script type="text/javascript" src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
   <script type="text/javascript">
     var area_markers = [],
@@ -97,10 +98,61 @@
       region_markers = [],
       shrine_markers = [],
       stable_markers = [],
+      talus_markers = [],
       tower_markers = [],
       town_markers = [],
       repeatOnXAxis = false,
       minZoomLevel = 3;
+
+    var skull_red = new google.maps.MarkerImage('skull_red.png',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var skull_orange = new google.maps.MarkerImage('skull_orange.png',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var skull_blue = new google.maps.MarkerImage('skull_blue.png',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var icon_tower = new google.maps.MarkerImage('https://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/40?cb=20170308170324&path-prefix=en',
+                  new google.maps.Size(40, 40),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(20, 20));
+
+    var icon_shrine = new google.maps.MarkerImage('http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var icon_village = new google.maps.MarkerImage('https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var icon_lab = new google.maps.MarkerImage('http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var icon_stable = new google.maps.MarkerImage('http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/32?cb=20170308170323&path-prefix=en',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
+
+    var icon_other = new google.maps.MarkerImage('http://vignette4.wikia.nocookie.net/nintendo/images/7/7b/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Other_landmark.svg/revision/latest/scale-to-width-down/30?cb=20170308170136&path-prefix=en',
+                  new google.maps.Size(30, 30),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(15, 15));
+
+    var icon_korok = new google.maps.MarkerImage('korok.png',
+                  new google.maps.Size(32, 32),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(16, 16));
 
     function minWindow(elem) {
       var Id = $(elem).attr("id").replace("min-", "options-window-");
@@ -282,7 +334,8 @@
       ];
 
       var labs = [
-
+        ['Hateno', -42.24478535602798, 83.067626953125],
+        ['Akkala', 56.8970039212726, 99.228515625]
       ];
 
       var other = [
@@ -476,13 +529,20 @@
         ['', -62.8250556145643, 99.931640625]
       ];
 
+      var talus = [
+
+      ];
+
       var markerRegion = new MarkerClusterer(map, region_markers),
         markerArea = new MarkerClusterer(map, area_markers),
         markerTown = new MarkerClusterer(map, town_markers),
+        markerOther = new MarkerClusterer(map, other_markers),
+        markerLab = new MarkerClusterer(map, lab_markers),
         markerTower = new MarkerClusterer(map, tower_markers),
         markerShrine = new MarkerClusterer(map, shrine_markers),
         markerLynel = new MarkerClusterer(map, lynel_markers),
-        markerHinox = new MarkerClusterer(map, hinox_markers);
+        markerHinox = new MarkerClusterer(map, hinox_markers),
+        markerTalus = new MarkerClusterer(map, talus_markers);
 
       setMarkers(map);
 
@@ -532,7 +592,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en'
+            icon: icon_village
           });
           town_markers.push(marker);
         }
@@ -545,7 +605,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en'
+            icon: icon_other
           });
           other_markers.push(marker);
         }
@@ -558,7 +618,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en'
+            icon: icon_lab
           });
           lab_markers.push(marker);
         }
@@ -571,7 +631,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/32?cb=20170308170323&path-prefix=en'
+            icon: icon_stable
           });
           stable_markers.push(marker);
         }
@@ -584,7 +644,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'https://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en'
+            icon: icon_tower
           });
           tower_markers.push(marker);
         }
@@ -597,7 +657,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en'
+            icon: icon_shrine
           });
           shrine_markers.push(marker);
         }
@@ -623,7 +683,7 @@
               lng: place[2]
             },
             map: map,
-            icon: 'skull_red.png'
+            icon: skull_red
           });
           lynel_markers.push(marker);
         }
@@ -636,9 +696,22 @@
               lng: place[2]
             },
             map: map,
-            icon: 'skull_orange.png'
+            icon: skull_orange
           });
           hinox_markers.push(marker);
+        }
+
+        for (i = 0; i < talus.length; i++) {
+          place = talus[i];
+          marker = new google.maps.Marker({
+            position: {
+              lat: place[1],
+              lng: place[2]
+            },
+            map: map,
+            icon: skull_blue
+          });
+          talus_markers.push(marker);
         }
       }
     };
