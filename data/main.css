@@ -1,5 +1,4 @@
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -18,20 +17,17 @@ span.loading {
   font: 300 italic 72px/400px "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
 }
 
-#options-container
-{
+#options-container {
   position: fixed;
   bottom: 0px;  
 }
 
-.sub-container
-{
+.sub-container {
   display: inline-block;
   vertical-align: bottom;
 }
 
-.options-window
-{
+.options-window {
   background:#fff;  
   height:auto;
   width:150px;  
@@ -40,8 +36,7 @@ span.loading {
   overflow-x: hidden;
 }
 
-.options-banner
-{
+.options-banner {
   background:#055816; 
   height:25px;
   width:150px;
@@ -49,8 +44,7 @@ span.loading {
   text-align: center;
 }
 
-button.link 
-{ 
+button.link { 
   background:white; 
   position:relative; 
   left:120px
