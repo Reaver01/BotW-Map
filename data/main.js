@@ -371,7 +371,7 @@ window.onload = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        marker.info.open(map, this);
+        this.info.open(map, this);
       });
       shrine_markers.push(marker);
     }
@@ -393,7 +393,7 @@ window.onload = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        marker.info.open(map, this);
+        this.info.open(map, this);
       });
       korok_markers.push(marker);
     }
@@ -414,7 +414,7 @@ window.onload = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        marker.info.open(map, this);
+        this.info.open(map, this);
       });
       lynel_markers.push(marker);
     }
@@ -435,7 +435,7 @@ window.onload = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        marker.info.open(map, this);
+        this.info.open(map, this);
       });
       hinox_markers.push(marker);
     }
@@ -456,7 +456,7 @@ window.onload = function() {
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        marker.info.open(map, this);
+        this.info.open(map, this);
       });
 
       talus_markers.push(marker);
