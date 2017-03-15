@@ -365,6 +365,14 @@ window.onload = function() {
         map: map,
         icon: icon_shrine
       });
+
+      marker.info = new google.maps.InfoWindow({
+        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        marker.info.open(map, this);
+      });
       shrine_markers.push(marker);
     }
 
@@ -379,6 +387,14 @@ window.onload = function() {
         icon: icon_korok,
         visible: false
       });
+
+      marker.info = new google.maps.InfoWindow({
+        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        marker.info.open(map, this);
+      });
       korok_markers.push(marker);
     }
 
@@ -391,6 +407,14 @@ window.onload = function() {
         },
         map: map,
         icon: skull_red
+      });
+
+      marker.info = new google.maps.InfoWindow({
+        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        marker.info.open(map, this);
       });
       lynel_markers.push(marker);
     }
@@ -405,6 +429,14 @@ window.onload = function() {
         map: map,
         icon: skull_purple
       });
+
+      marker.info = new google.maps.InfoWindow({
+        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        marker.info.open(map, this);
+      });
       hinox_markers.push(marker);
     }
 
@@ -418,6 +450,15 @@ window.onload = function() {
         map: map,
         icon: skull_blue
       });
+
+      marker.info = new google.maps.InfoWindow({
+        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        marker.info.open(map, this);
+      });
+
       talus_markers.push(marker);
     }
   }
