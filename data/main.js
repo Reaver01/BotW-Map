@@ -300,6 +300,12 @@ window.onload = function() {
         map: map,
         icon: icon_village
       });
+      marker.info = new google.maps.InfoWindow({
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        this.info.open(map, this);
+      });
       town_markers.push(marker);
     }
 
@@ -312,6 +318,12 @@ window.onload = function() {
         },
         map: map,
         icon: icon_other
+      });
+      marker.info = new google.maps.InfoWindow({
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        this.info.open(map, this);
       });
       other_markers.push(marker);
     }
@@ -326,6 +338,12 @@ window.onload = function() {
         map: map,
         icon: icon_lab
       });
+      marker.info = new google.maps.InfoWindow({
+        content: '<h3>' + place[0] + ' Ancient Tech Lab</h3><p>' + place[1] + ', ' + place[2] + '</p>'
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        this.info.open(map, this);
+      });
       lab_markers.push(marker);
     }
 
@@ -338,6 +356,12 @@ window.onload = function() {
         },
         map: map,
         icon: icon_stable
+      });
+      marker.info = new google.maps.InfoWindow({
+        content: '<h3>' + place[0] + ' Stable</h3><p>' + place[1] + ', ' + place[2] + '</p>'
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        this.info.open(map, this);
       });
       stable_markers.push(marker);
     }
@@ -352,6 +376,12 @@ window.onload = function() {
         map: map,
         icon: icon_tower
       });
+      marker.info = new google.maps.InfoWindow({
+        content: '<h3>' + place[0] + ' Tower</h3><p>' + place[1] + ', ' + place[2] + '</p>'
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        this.info.open(map, this);
+      });
       tower_markers.push(marker);
     }
 
@@ -365,11 +395,9 @@ window.onload = function() {
         map: map,
         icon: icon_shrine
       });
-
       marker.info = new google.maps.InfoWindow({
-        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+        content: '<h3>' + place[0] + ' Shrine</h3><p>' + place[1] + ', ' + place[2] + '</p><p><a href="' + place[3] + '" target="_blank">' + place[3] + '</a></p>'
       });
-
       google.maps.event.addListener(marker, 'click', function() {
         this.info.open(map, this);
       });
@@ -387,11 +415,9 @@ window.onload = function() {
         icon: icon_korok,
         visible: false
       });
-
       marker.info = new google.maps.InfoWindow({
-        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
       });
-
       google.maps.event.addListener(marker, 'click', function() {
         this.info.open(map, this);
       });
@@ -408,11 +434,9 @@ window.onload = function() {
         map: map,
         icon: skull_red
       });
-
       marker.info = new google.maps.InfoWindow({
-        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
       });
-
       google.maps.event.addListener(marker, 'click', function() {
         this.info.open(map, this);
       });
@@ -429,11 +453,9 @@ window.onload = function() {
         map: map,
         icon: skull_purple
       });
-
       marker.info = new google.maps.InfoWindow({
-        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
       });
-
       google.maps.event.addListener(marker, 'click', function() {
         this.info.open(map, this);
       });
@@ -450,15 +472,12 @@ window.onload = function() {
         map: map,
         icon: skull_blue
       });
-
       marker.info = new google.maps.InfoWindow({
-        content: "['" + place[0] + "', " + place[1] + ', ' + place[2] + '],'
+        content: '<h3>' + place[0] + '</h3><p>' + place[1] + ', ' + place[2] + '</p>'
       });
-
       google.maps.event.addListener(marker, 'click', function() {
         this.info.open(map, this);
       });
-
       talus_markers.push(marker);
     }
   }
