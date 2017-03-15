@@ -12,57 +12,47 @@ var area_markers = [],
   tower_markers = [],
   town_markers = [],
   repeatOnXAxis = false,
-  minZoomLevel = 3;
-
-var skull_red = new google.maps.MarkerImage('skull_red.png',
+  minZoomLevel = 3,
+  skull_red = new google.maps.MarkerImage('skull_red.png',
               new google.maps.Size(32, 32),
               new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var skull_purple = new google.maps.MarkerImage('skull_purple.png',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var skull_blue = new google.maps.MarkerImage('skull_blue.png',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var icon_tower = new google.maps.MarkerImage('https://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/40?cb=20170308170324&path-prefix=en',
-              new google.maps.Size(40, 40),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(20, 20));
-
-var icon_shrine = new google.maps.MarkerImage('http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var icon_village = new google.maps.MarkerImage('https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var icon_lab = new google.maps.MarkerImage('http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var icon_stable = new google.maps.MarkerImage('http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/32?cb=20170308170323&path-prefix=en',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
-
-var icon_other = new google.maps.MarkerImage('http://vignette4.wikia.nocookie.net/nintendo/images/7/7b/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Other_landmark.svg/revision/latest/scale-to-width-down/30?cb=20170308170136&path-prefix=en',
-              new google.maps.Size(30, 30),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(15, 15));
-
-var icon_korok = new google.maps.MarkerImage('korok.png',
-              new google.maps.Size(32, 32),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(16, 16));
+              new google.maps.Point(16, 16)),
+  skull_purple = new google.maps.MarkerImage('skull_purple.png',
+                 new google.maps.Size(32, 32),
+                 new google.maps.Point(0, 0),
+                 new google.maps.Point(16, 16)),
+  skull_blue = new google.maps.MarkerImage('skull_blue.png',
+               new google.maps.Size(32, 32),
+               new google.maps.Point(0, 0),
+               new google.maps.Point(16, 16)),
+  icon_tower = new google.maps.MarkerImage('https://vignette3.wikia.nocookie.net/nintendo/images/3/38/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tower.svg/revision/latest/scale-to-width-down/40?cb=20170308170324&path-prefix=en',
+               new google.maps.Size(40, 40),
+               new google.maps.Point(0, 0),
+               new google.maps.Point(20, 20)),
+  icon_shrine = new google.maps.MarkerImage('http://vignette2.wikia.nocookie.net/nintendo/images/e/ea/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Shrine_%28completed%29.svg/revision/latest/scale-to-width-down/32?cb=20170308170322&path-prefix=en',
+                new google.maps.Size(32, 32),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(16, 16)),
+  icon_village = new google.maps.MarkerImage('https://vignette4.wikia.nocookie.net/nintendo/images/8/8a/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Village.svg/revision/latest/scale-to-width-down/32?cb=20170308170325&path-prefix=en',
+                 new google.maps.Size(32, 32),
+                 new google.maps.Point(0, 0),
+                 new google.maps.Point(16, 16)),
+  icon_lab = new google.maps.MarkerImage('http://vignette3.wikia.nocookie.net/nintendo/images/5/5e/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Tech_Lab.svg/revision/latest/scale-to-width-down/32?cb=20170308170324&path-prefix=en',
+             new google.maps.Size(32, 32),
+             new google.maps.Point(0, 0),
+             new google.maps.Point(16, 16)),
+  icon_stable = new google.maps.MarkerImage('http://vignette1.wikia.nocookie.net/nintendo/images/b/b0/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Stable.svg/revision/latest/scale-to-width-down/32?cb=20170308170323&path-prefix=en',
+                new google.maps.Size(32, 32),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(16, 16)),
+  icon_other = new google.maps.MarkerImage('http://vignette4.wikia.nocookie.net/nintendo/images/7/7b/The_Legend_of_Zelda_-_Breath_of_the_Wild_-_Map_icon_-_Other_landmark.svg/revision/latest/scale-to-width-down/30?cb=20170308170136&path-prefix=en',
+               new google.maps.Size(30, 30),
+               new google.maps.Point(0, 0),
+               new google.maps.Point(15, 15)),
+  icon_korok = new google.maps.MarkerImage('korok.png',
+               new google.maps.Size(32, 32),
+               new google.maps.Point(0, 0),
+               new google.maps.Point(16, 16));
 
 function minWindow(elem) {
   var Id = $(elem).attr("id").replace("min-", "options-window-");
