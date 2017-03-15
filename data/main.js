@@ -12,6 +12,7 @@ var area_markers = [],
   talus_markers = [],
   tower_markers = [],
   town_markers = [],
+  session_coordinates = [],
   repeatOnXAxis = false,
   minZoomLevel = 3,
   icon_korok = new google.maps.MarkerImage('korok.png', new google.maps.Size(32, 32), new google.maps.Point(0, 0), new google.maps.Point(16, 16)),
@@ -106,7 +107,12 @@ window.onload = function() {
     var lat = event.latLng.lat();
     var lng = event.latLng.lng();
     // populate yor box/field with lat, lng
-    prompt("Coordinates to be copied:", "['', " + lat + ", " + lng + "],");
+    session_coordinates.push("['', " + lat + ", " + lng + "]");
+    var output = '';
+   for (i = 0; i < session_coordinates.length; i ++) {
+      output += session_coordinates[i] + ",<br>";
+    }
+    document.getElementById("options-window-B").innerHTML = output;
   });
 
   google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -165,7 +171,7 @@ window.onload = function() {
   document.getElementById("lynel_count").innerHTML = lynel.length;
   document.getElementById("hinox_count").innerHTML = hinox.length;
   document.getElementById("talus_count").innerHTML = talus.length;
-  document.getElementById("molduga_count").innerHTML = talus.length;
+  document.getElementById("molduga_count").innerHTML = molduga.length;
 
   var markerArea = new MarkerClusterer(map, area_markers),
     markerArea2 = new MarkerClusterer(map, area2_markers),

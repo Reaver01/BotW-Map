@@ -28,26 +28,35 @@ span.loading {
 }
 
 .options-window {
-  background:#fff;  
-  height:auto;
-  width:150px;  
-  border:1px solid #ACD8F0;  
-  overflow:scroll;
+  background: #fff;  
+  height: auto;
+  width: 150px;  
+  border: 1px solid #ACD8F0;  
+  overflow: scroll;
   overflow-x: hidden;
 }
 
+#options-window-B {
+  width: 300px;
+  max-height: 250px;
+}
+
 .options-banner {
-  background:#055816; 
-  height:25px;
-  width:150px;
-  border:1px solid #ACD8F0;
+  background: #055816; 
+  height: 25px;
+  width: 150px;
+  border: 1px solid #ACD8F0;
   text-align: center;
 }
 
+#min-B {
+  width: 300px;
+}
+
 button.link { 
-  background:white; 
-  position:relative; 
-  left:120px
+  background: white; 
+  position: relative; 
+  left: 120px
 }
 
 .gm-style-iw {
